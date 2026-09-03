@@ -1,0 +1,85 @@
+/* Tablet + desktop: giữ mobile-first, nới layout chứ không dùng bảng rộng */
+
+@media (min-width: 720px) {
+  .hero h1 {
+    font-size: 2.4rem;
+  }
+
+  .stack {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .home-page .stack,
+  .sync-mini,
+  .form-card,
+  .success-card,
+  .about-card {
+    grid-column: 1 / -1;
+  }
+
+  .home-page > .stack {
+    display: grid;
+  }
+
+  .stats-grid {
+    grid-template-columns: repeat(4, 1fr);
+  }
+
+  .yesno {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  #view {
+    padding-top: 24px;
+  }
+}
+
+@media (min-width: 1024px) {
+  :root {
+    --nav-h: 0px;
+  }
+
+  .bottom-nav {
+    position: static;
+    width: min(720px, 100%);
+    margin: 0 auto;
+    height: 64px;
+    border: 1px solid var(--line);
+    border-radius: 18px;
+    margin-top: 12px;
+  }
+
+  #view {
+    padding-bottom: 32px;
+  }
+
+  #toast-root {
+    left: auto;
+    right: 24px;
+    bottom: 24px;
+    width: min(360px, calc(100% - 48px));
+  }
+}
+
+@media (max-width: 359px) {
+  html {
+    font-size: 15px;
+  }
+
+  .hero h1 {
+    font-size: 1.7rem;
+  }
+
+  .bottom-nav a {
+    font-size: 10px;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation: none !important;
+    transition: none !important;
+  }
+}

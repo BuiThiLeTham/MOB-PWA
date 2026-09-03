@@ -1,0 +1,13 @@
+{
+  "name": "vku-field-survey-pwa",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "start": "npx --yes serve -l 4173",
+    "build": "node scripts/build-pages.mjs",
+    "deploy": "npm run build && wrangler pages deploy dist --project-name vku-field-survey-pwa --branch main --commit-dirty=true"
+  },
+  "devDependencies": {
+    "wrangler": "^4.37.1"
+  }
+}

@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-label="Field Survey">
+  <rect width="512" height="512" rx="96" fill="#0c3d36"/>
+  <rect x="118" y="86" width="276" height="340" rx="28" fill="#e7f6f2"/>
+  <rect x="150" y="128" width="212" height="28" rx="8" fill="#0f6e62"/>
+  <rect x="150" y="184" width="168" height="18" rx="6" fill="#9cc9c0"/>
+  <rect x="150" y="220" width="196" height="18" rx="6" fill="#9cc9c0"/>
+  <circle cx="168" cy="286" r="14" fill="#0f6e62"/>
+  <path d="M161 286 l5 6 12-14" fill="none" stroke="#e7f6f2" stroke-width="5" stroke-linecap="round"/>
+  <rect x="194" y="276" width="140" height="18" rx="6" fill="#9cc9c0"/>
+  <circle cx="168" cy="334" r="14" fill="#d97706"/>
+  <rect x="194" y="324" width="120" height="18" rx="6" fill="#9cc9c0"/>
+</svg>

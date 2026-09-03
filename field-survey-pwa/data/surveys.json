@@ -1,0 +1,298 @@
+{
+  "version": 1,
+  "surveys": [
+    {
+      "id": "facility-001",
+      "title": "Khảo sát cơ sở vật chất VKU",
+      "description": "Điều tra tình trạng phòng học, thiết bị và hạ tầng trong trường.",
+      "category": "Cơ sở vật chất",
+      "estimatedMinutes": 4,
+      "questions": [
+        {
+          "id": "q1",
+          "type": "text",
+          "label": "Tên địa điểm",
+          "placeholder": "Ví dụ: Phòng A101",
+          "required": true
+        },
+        {
+          "id": "q2",
+          "type": "select",
+          "label": "Loại địa điểm",
+          "required": true,
+          "options": [
+            "Phòng học",
+            "Phòng thí nghiệm",
+            "Thư viện",
+            "Nhà vệ sinh",
+            "Hành lang",
+            "Khu thể thao",
+            "Khác"
+          ]
+        },
+        {
+          "id": "q3",
+          "type": "radio",
+          "label": "Tình trạng tổng thể",
+          "required": true,
+          "options": ["Tốt", "Bình thường", "Hư hỏng", "Nguy hiểm"]
+        },
+        {
+          "id": "q4",
+          "type": "number",
+          "label": "Sức chứa / số lượng chỗ ngồi",
+          "min": 0,
+          "max": 500,
+          "required": false
+        },
+        {
+          "id": "q5",
+          "type": "rating",
+          "label": "Mức độ sạch sẽ",
+          "min": 1,
+          "max": 5,
+          "required": true
+        },
+        {
+          "id": "q6",
+          "type": "yesno",
+          "label": "Có thiết bị đang hư hỏng?",
+          "required": true
+        },
+        {
+          "id": "q7",
+          "type": "checkbox",
+          "label": "Vấn đề quan sát được",
+          "options": [
+            "Đèn hỏng",
+            "Máy lạnh / quạt hỏng",
+            "Bàn ghế hư",
+            "Máy chiếu lỗi",
+            "Wifi yếu",
+            "Không có vấn đề"
+          ]
+        },
+        {
+          "id": "q8",
+          "type": "date",
+          "label": "Ngày kiểm tra",
+          "required": true
+        },
+        {
+          "id": "q9",
+          "type": "time",
+          "label": "Thời điểm kiểm tra",
+          "required": false
+        },
+        {
+          "id": "q10",
+          "type": "textarea",
+          "label": "Ghi chú",
+          "placeholder": "Mô tả thêm nếu cần",
+          "required": false
+        }
+      ]
+    },
+    {
+      "id": "student-001",
+      "title": "Khảo sát ý kiến sinh viên",
+      "description": "Thu thập ý kiến về chất lượng học tập, hỗ trợ và dịch vụ nhà trường.",
+      "category": "Xã hội học",
+      "estimatedMinutes": 3,
+      "questions": [
+        {
+          "id": "q1",
+          "type": "text",
+          "label": "Mã sinh viên / lớp",
+          "placeholder": "Ví dụ: 21IT123 hoặc IT21A",
+          "required": true
+        },
+        {
+          "id": "q2",
+          "type": "select",
+          "label": "Khoa / ngành",
+          "required": true,
+          "options": [
+            "Công nghệ thông tin",
+            "Điện tử viễn thông",
+            "Kinh tế số",
+            "Ngôn ngữ Anh",
+            "Khác"
+          ]
+        },
+        {
+          "id": "q3",
+          "type": "rating",
+          "label": "Mức độ hài lòng về chất lượng giảng dạy",
+          "required": true
+        },
+        {
+          "id": "q4",
+          "type": "radio",
+          "label": "Hình thức học bạn thấy hiệu quả nhất",
+          "required": true,
+          "options": ["Trực tiếp", "Trực tuyến", "Kết hợp"]
+        },
+        {
+          "id": "q5",
+          "type": "checkbox",
+          "label": "Vấn đề bạn thường gặp",
+          "options": [
+            "Quá tải bài tập",
+            "Thiết bị thực hành thiếu",
+            "Lịch học chồng chéo",
+            "Hỗ trợ chậm",
+            "Không có vấn đề"
+          ]
+        },
+        {
+          "id": "q6",
+          "type": "yesno",
+          "label": "Bạn có muốn tham gia khảo sát định kỳ?",
+          "required": true
+        },
+        {
+          "id": "q7",
+          "type": "textarea",
+          "label": "Góp ý thêm",
+          "placeholder": "Ý kiến, đề xuất cải thiện...",
+          "required": false
+        },
+        {
+          "id": "q8",
+          "type": "date",
+          "label": "Ngày trả lời",
+          "required": true
+        }
+      ]
+    },
+    {
+      "id": "environment-001",
+      "title": "Điều tra môi trường khuôn viên",
+      "description": "Ghi nhận tình trạng vệ sinh, cây xanh, rác thải và tiếng ồn tại hiện trường.",
+      "category": "Môi trường",
+      "estimatedMinutes": 4,
+      "questions": [
+        {
+          "id": "q1",
+          "type": "text",
+          "label": "Khu vực quan sát",
+          "placeholder": "Ví dụ: Khu B, sân giữa, cổng phụ",
+          "required": true
+        },
+        {
+          "id": "q2",
+          "type": "radio",
+          "label": "Mức độ rác thải",
+          "required": true,
+          "options": ["Sạch", "Ít", "Nhiều", "Nghiêm trọng"]
+        },
+        {
+          "id": "q3",
+          "type": "rating",
+          "label": "Chất lượng không khí cảm nhận",
+          "required": true
+        },
+        {
+          "id": "q4",
+          "type": "yesno",
+          "label": "Có điểm ùn ứ nước / ngập?",
+          "required": true
+        },
+        {
+          "id": "q5",
+          "type": "checkbox",
+          "label": "Hiện tượng quan sát",
+          "options": [
+            "Rác nhựa",
+            "Mùi khó chịu",
+            "Cây chết / héo",
+            "Tiếng ồn lớn",
+            "Côn trùng",
+            "Không có"
+          ]
+        },
+        {
+          "id": "q6",
+          "type": "number",
+          "label": "Số thùng rác trong khu vực",
+          "min": 0,
+          "max": 100
+        },
+        {
+          "id": "q7",
+          "type": "time",
+          "label": "Giờ quan sát",
+          "required": true
+        },
+        {
+          "id": "q8",
+          "type": "textarea",
+          "label": "Ghi chú hiện trường",
+          "required": false
+        }
+      ]
+    },
+    {
+      "id": "infra-001",
+      "title": "Kiểm tra đường sá và hạ tầng",
+      "description": "Ghi nhận tình trạng đường đi, biển báo, chiếu sáng phục vụ kiểm tra hiện trường.",
+      "category": "Hạ tầng",
+      "estimatedMinutes": 3,
+      "questions": [
+        {
+          "id": "q1",
+          "type": "text",
+          "label": "Đoạn đường / vị trí",
+          "placeholder": "Ví dụ: Đường vào cổng chính",
+          "required": true
+        },
+        {
+          "id": "q2",
+          "type": "select",
+          "label": "Loại hạ tầng",
+          "required": true,
+          "options": ["Đường nội bộ", "Vỉa hè", "Cầu thang", "Bãi xe", "Hệ thống điện", "Khác"]
+        },
+        {
+          "id": "q3",
+          "type": "radio",
+          "label": "Mức độ hư hỏng",
+          "required": true,
+          "options": ["Không hư", "Nhẹ", "Trung bình", "Nặng", "Cần đóng"]
+        },
+        {
+          "id": "q4",
+          "type": "yesno",
+          "label": "Có nguy cơ mất an toàn?",
+          "required": true
+        },
+        {
+          "id": "q5",
+          "type": "number",
+          "label": "Ước tính chiều dài đoạn ảnh hưởng (mét)",
+          "min": 0,
+          "max": 5000
+        },
+        {
+          "id": "q6",
+          "type": "checkbox",
+          "label": "Dấu hiệu quan sát",
+          "options": ["Ổ gà", "Nứt", "Ngập", "Thiếu đèn", "Thiếu biển báo", "Không có"]
+        },
+        {
+          "id": "q7",
+          "type": "date",
+          "label": "Ngày kiểm tra",
+          "required": true
+        },
+        {
+          "id": "q8",
+          "type": "textarea",
+          "label": "Đề xuất xử lý",
+          "required": false
+        }
+      ]
+    }
+  ]
+}
