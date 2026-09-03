@@ -1,60 +1,219 @@
 # VKU Field Survey PWA
 
-Offline-first Progressive Web App cho điều tra / khảo sát thực địa. **Một mã nguồn vừa là website vừa là ứng dụng** (mở trên trình duyệt hoặc cài ra màn hình chính). Người dùng điền form khi không có Internet; dữ liệu lưu IndexedDB rồi đồng bộ Google Sheets khi có mạng.
+Một mã nguồn **vừa website vừa ứng dụng** (PWA). Khảo sát thực địa offline-first: lưu IndexedDB trên thiết bị, có mạng thì đồng bộ Google Sheets.
 
-Dự án bám sát môn phát triển ứng dụng đa nền tảng / đa phương tiện (Week 3 — Progressive Web Apps, mini-project **VKU Field Survey PWA**).
+Môn phát triển ứng dụng đa nền tảng / đa phương tiện — Week 3 Progressive Web Apps.
 
 ---
+
+# HƯỚNG DẪN NHANH
+
+Làm theo thứ tự: chạy local → (tuỳ chọn) Google Sheets → deploy HTTPS → cài app trên điện thoại.
+
+---
+
+## A. Chạy trên máy tính (web)
+
+Không mở file bằng `file://`. Phải chạy HTTP server.
+
+**Cách 1 — Python**
+
+```powershell
+cd d:\mob\field-survey-pwa
+python -m http.server 4173
+```
+
+**Cách 2 — Node**
+
+```powershell
+cd d:\mob\field-survey-pwa
+npx --yes serve -l 4173
+```
+
+Mở trình duyệt: [http://localhost:4173](http://localhost:4173)
+
+Header hiện nhãn **Web**. Có thể khảo sát ngay, kể cả khi chưa cấu hình Google Sheets (dữ liệu nằm trên máy).
+
+---
+
+## B. Cài đặt trong app ở đâu?
+
+Nút **⚙ Cài đặt** nằm **góc trên bên phải** (cạnh Online/Offline).
+
+Hoặc:
+
+- Trang chủ → chữ **Cài đặt**
+- Địa chỉ: `http://localhost:4173/#/settings`
+
+Tại đây dán URL Google Apps Script vào ô **Google Apps Script URL** → **Lưu cấu hình**.
+
+Mỗi thiết bị lưu riêng. Máy tính đã dán URL **không** tự hiện trên điện thoại — phải dán lại trên điện thoại.
+
+---
+
+## C. Nối Google Sheets (để đồng bộ kết quả)
+
+Chi tiết: `apps-script/README.md`. Tóm tắt:
+
+1. Tạo Google Sheet tên `FieldSurveyDB`.
+2. `Tiện ích mở rộng` → `Apps Script`.
+3. Dán hết file `apps-script/Code.gs` → Lưu.
+4. Chọn hàm `setupSheets` → **Chạy** (cấp quyền Google lần đầu).
+5. `Triển khai` → `New deployment` → loại **Web app**
+   - Execute as: **Me**
+   - Who has access: **Anyone**
+6. Copy URL `https://script.google.com/macros/s/...../exec`
+7. Mở PWA → **⚙ Cài đặt** → dán URL → **Lưu cấu hình**
+
+Mở URL đó trên trình duyệt phải thấy JSON `{"ok":true,"service":"Field Survey API",...}`.
+
+Chưa có URL thì vẫn làm khảo sát được; bản ghi ở trạng thái **Chờ đồng bộ**.
+
+---
+
+## D. Chạy trên điện thoại (cùng Wi‑Fi)
+
+1. Máy tính và điện thoại **chung Wi‑Fi** (điện thoại không dùng 4G).
+2. Máy tính chạy:
+
+```powershell
+cd d:\mob\field-survey-pwa
+python -m http.server 4173 --bind 0.0.0.0
+```
+
+3. Lấy IP máy: PowerShell `ipconfig` → **IPv4 Address** (ví dụ `172.26.17.25`).
+4. Điện thoại mở: `http://172.26.17.25:4173`
+
+Nếu không vào được: cho phép Python qua Firewall, tắt VPN.
+
+**Hạn chế:** `http://IP` thường **không cài được ra màn hình chính** và offline/refresh có thể hỏng. Muốn thành app → mục E + F (cần HTTPS).
+
+---
+
+## E. Deploy lên Cloudflare (HTTPS)
+
+Cần tài khoản [Cloudflare](https://dash.cloudflare.com/sign-up) (miễn phí).
+
+Mở **terminal của bạn** (không để lệnh login hết hạn):
+
+```powershell
+cd d:\mob\field-survey-pwa
+fnm env --use-on-cd --shell powershell | Out-String | Invoke-Expression
+fnm use 20.18.0
+npm install
+npx wrangler login
+```
+
+Khi trình duyệt hiện **Wrangler wants to access your account** → bấm **Authorize** ngay. Terminal phải báo đã login thành công.
+
+Rồi publish:
+
+```powershell
+npm run deploy
+```
+
+Hoặc một lệnh: `.\scripts\deploy.ps1`
+
+URL production:
+
+`https://vku-field-survey-pwa.pages.dev`
+
+Lần sau chỉ cần `npm run deploy`.
+
+Tự deploy khi push GitHub `main`: thêm secret `CLOUDFLARE_API_TOKEN` và `CLOUDFLARE_ACCOUNT_ID`. File: `.github/workflows/cloudflare-pages.yml`.
+
+Cách khác không cần Wrangler: kéo thư mục `field-survey-pwa` vào [Netlify Drop](https://app.netlify.com/drop).
+
+---
+
+## F. Cài như ứng dụng (Home Screen)
+
+Phải mở bằng **HTTPS** (link Cloudflare/Netlify), không dùng `http://IP`.
+
+**Android — Chrome**
+
+1. Mở `https://vku-field-survey-pwa.pages.dev`
+2. Trên trang chủ bấm **Cài lên màn hình chính**, hoặc menu `⋮` → **Cài đặt ứng dụng**
+3. Mở icon **Field Survey**
+
+**iPhone — Safari** (không dùng Chrome)
+
+1. Mở link HTTPS
+2. Nút **Chia sẻ** → **Thêm vào Màn hình chính** → Thêm
+3. Mở icon
+
+Header lúc này hiện nhãn **App**. Vào **⚙ Cài đặt** trên **điện thoại** và dán lại URL Apps Script.
+
+---
+
+## G. Demo offline (thuyết trình)
+
+Làm trên bản HTTPS đã mở **một lần khi còn mạng** (để Service Worker kịp cache).
+
+1. Online — mở app.
+2. Tắt mạng (máy bay hoặc DevTools → Offline).
+3. Refresh — app vẫn mở.
+4. Điền khảo sát → Gửi.
+5. Chrome DevTools → Application → IndexedDB → `FieldSurveyDB` → `responses` → `status = pending`.
+6. Bật mạng — tự đồng bộ (hoặc tab **Đồng bộ**).
+7. Mở Google Sheet — có đúng 1 dòng / 1 `response_id`.
+
+---
+
+## H. Điều hướng trong app
+
+| Chỗ | Làm gì |
+| --- | --- |
+| **Home** | Trạng thái mạng, danh sách khảo sát, chờ sync |
+| **Khảo sát** | Tất cả cuộc khảo sát |
+| **Lịch sử** | Bài đã gửi trên thiết bị này |
+| **Đồng bộ** | Số pending / synced / lỗi, nút đồng bộ ngay |
+| **⚙ Cài đặt** | URL Apps Script, token, cài app, xoá lịch sử đã sync |
+
+---
+
+# TÀI LIỆU ĐỒ ÁN
 
 ## 1. Project introduction
 
-Nhân viên điều tra thường làm việc ở nơi sóng yếu hoặc không có mạng. Ứng dụng chỉ hoạt động online dễ làm mất dữ liệu hoặc không gửi được form.
+Nhân viên điều tra thường làm việc ở nơi sóng yếu. App chỉ online dễ mất dữ liệu.
 
-Field Survey PWA giải quyết bằng nguyên tắc **offline-first**:
+Field Survey PWA:
 
-1. Luôn ghi câu trả lời vào IndexedDB trên thiết bị.
-2. Nếu online, thử đồng bộ ngay lên Google Apps Script → Google Sheets.
-3. Nếu offline, `status = pending` và xếp hàng đợi.
-4. Khi có Internet (sự kiện `online` hoặc Background Sync), Sync Manager gửi các bản ghi còn thiếu.
-5. Server chống trùng theo `responseId` nên retry an toàn.
-
----
+1. Luôn ghi câu trả lời vào IndexedDB.
+2. Online → đồng bộ Google Apps Script → Google Sheets.
+3. Offline → `status = pending`.
+4. Có mạng lại → Sync Manager gửi bản ghi còn thiếu.
+5. Server chống trùng theo `responseId`.
 
 ## 2. Features
 
-- Danh sách khảo sát động từ JSON (có thể lấy thêm từ Google Sheets).
-- Form nhiều loại câu hỏi: text, textarea, number, radio, checkbox, select, date, time, rating, có/không.
-- Validate trên giao diện, không dùng `alert()`.
-- Offline-first submit + hàng đợi đồng bộ.
-- Trạng thái từng bản ghi: pending / syncing / synced / failed.
-- Trang lịch sử đọc từ IndexedDB.
-- Chỉ báo Online / Offline luôn hiện.
-- Chạy như **website** trên PC/tablet/phone (responsive).
-- Cài như **ứng dụng** (Home Screen, `display: standalone`) từ cùng source.
-- PWA: Manifest, Service Worker, Cache API, Background Sync (có fallback).
-
----
+- Khảo sát JSON (text, textarea, number, radio, checkbox, select, date, time, rating, có/không).
+- Validate trên form, không `alert()`.
+- Offline-first + hàng đợi sync.
+- Trạng thái: pending / syncing / synced / failed.
+- Lịch sử từ IndexedDB.
+- Website responsive + cài Home Screen.
+- Manifest, Service Worker, Cache API, Background Sync (có fallback).
 
 ## 3. Technologies
 
 | Lớp | Công nghệ |
 | --- | --- |
 | UI | HTML5, CSS3, JavaScript ES6 modules |
-| PWA | Web App Manifest, Service Worker, Cache API |
-| Local DB | IndexedDB (`FieldSurveyDB`) |
-| Sync | Background Sync API + `window.online` fallback |
+| PWA | Manifest, Service Worker, Cache API |
+| Local | IndexedDB `FieldSurveyDB` |
+| Sync | Background Sync + `window.online` |
 | Backend | Google Apps Script Web App |
-| Database trung tâm | Google Sheets |
-| Hosting | Bất kỳ HTTPS tĩnh (GitHub Pages, Netlify, Firebase, nginx) |
+| Database | Google Sheets |
+| Hosting | Cloudflare Pages (HTTPS) |
 
-Không dùng MySQL cho kết quả khảo sát. Không dùng framework nặng.
-
----
+Không dùng MySQL. Không dùng framework nặng.
 
 ## 4. Architecture
 
 ```text
-User Mobile PWA
+User (Web trình duyệt  hoặc  App Home Screen)
     → Survey UI (HTML/CSS/JS)
     → IndexedDB (surveys, responses, syncQueue, settings)
          │
@@ -64,10 +223,6 @@ User Mobile PWA
   chờ sync     Sync Manager → Google Apps Script → Google Sheets
 ```
 
-Luồng submit **không** ghi thẳng lên Sheets. Local là nguồn sự thật trên thiết bị cho đến khi server xác nhận.
-
----
-
 ## 5. Offline-first mechanism
 
 ```text
@@ -75,29 +230,20 @@ Form submit
   → lưu IndexedDB (luôn luôn)
   → navigator.onLine?
         Có  → POST Apps Script → status=synced
-        Không → status=pending → đăng ký Background Sync
-  → online / sync event
-        → lấy pending+failed
-        → POST lần lượt
-        → chỉ đổi synced khi API trả ok
+        Không → status=pending → Background Sync
+  → online / sync
+        → pending+failed → POST
+        → chỉ synced khi API trả ok
 ```
 
-Reload trang hoặc đóng trình duyệt **không mất** dữ liệu vì IndexedDB là lưu trữ bền.
-
----
-
 ## 6. IndexedDB
-
-Database: `FieldSurveyDB`
 
 | Store | Key | Mục đích |
 | --- | --- | --- |
 | `surveys` | `id` | Cache định nghĩa khảo sát |
 | `responses` | `id` | Câu trả lời + trạng thái sync |
-| `syncQueue` | `id` | Hàng đợi tham chiếu `responseId` |
+| `syncQueue` | `id` | Hàng đợi `responseId` |
 | `settings` | `key` | `deviceId`, `apiUrl`, `syncToken` |
-
-Response:
 
 ```json
 {
@@ -110,123 +256,45 @@ Response:
 }
 ```
 
----
-
 ## 7. Service Worker
 
-File `service-worker.js` triển khai đủ vòng đời Install → Activate → Fetch.
+Vòng đời: Install → Activate → Fetch.
 
-| Loại tài nguyên | Strategy | Lý do |
+| Tài nguyên | Strategy | Lý do |
 | --- | --- | --- |
-| HTML, CSS, JS, icons, manifest | Cache-First | App Shell phải mở được khi offline / refresh khi mất mạng |
-| `data/surveys.json` | Network-First | Ưu tiên khảo sát mới; fallback cache khi mất mạng |
-| POST Google Apps Script | Network-Only (không intercept) | Không được cache giao dịch đồng bộ |
-
----
+| HTML, CSS, JS, icons | Cache-First | App Shell mở khi offline |
+| `data/surveys.json` | Network-First | Ưu tiên khảo sát mới |
+| POST Apps Script | Network-Only | Không cache giao dịch |
 
 ## 8. Sync mechanism
 
-1. `sync.js` đọc record `pending` / `failed` / `syncing`.
-2. Đổi `syncing`, gọi `api.js` → `fetch` POST.
-3. Thành công: `synced`, xóa khỏi `syncQueue`.
-4. Thất bại: giữ nguyên local, `pending` hoặc `failed`, retry sau.
-5. Nếu trình duyệt hỗ trợ Background Sync: `registration.sync.register('sync-responses')`.
-6. Fallback: `window.addEventListener('online', ...)`.
+1. Đọc `pending` / `failed` / `syncing`.
+2. POST qua `api.js`.
+3. Thành công → `synced`.
+4. Lỗi → giữ local, retry.
+5. Background Sync `sync-responses` hoặc `window.online`.
 
----
+## 9. Google Sheets
 
-## 9. Google Sheets integration
+- **Surveys** — `survey_id | title | description | category | created_at`
+- **Questions** — `question_id | survey_id | type | label | options | required`
+- **Responses** — `response_id | survey_id | survey_title | submitted_at | device_id | status | answers_json | q1 | q2 | ...`
 
-Ba sheet:
+`doPost` tìm `response_id` đã có → `{ duplicate: true }`, không thêm dòng.
 
-**Surveys** — `survey_id | title | description | category | created_at`
+Client gửi `Content-Type: text/plain` để tránh CORS preflight.
 
-**Questions** — `question_id | survey_id | type | label | options | required`
+## 10–12. Cài đặt / cấu hình / chạy local
 
-**Responses** — `response_id | survey_id | survey_title | submitted_at | device_id | status | answers_json | q1 | q2 | ...`
+Xem mục **A, B, C** ở đầu file.
 
-`answers_json` là nguồn sự thật linh hoạt cho nhiều loại khảo sát. Apps Script đồng thời bung từng câu thành cột để dễ demo / lọc trên Sheets.
+## 13. Deployment
 
-Chống trùng: `doPost` tìm `response_id` đã có thì trả `{ ok: true, duplicate: true }` và **không** `appendRow`.
+Xem mục **E**.
 
----
+## 14. Offline testing
 
-## 10. Installation
-
-Clone hoặc copy thư mục `field-survey-pwa/`. Không cần `npm install` cho runtime (vanilla JS).
-
-Cần trình duyệt hiện đại (Chrome / Edge / Firefox / Safari) và môi trường **localhost hoặc HTTPS** để Service Worker chạy.
-
----
-
-## 11. Configuration
-
-Mở `js/config.js`, hoặc trong app bấm **⚙ Cài đặt** (góc trên bên phải) / Home → **Cài đặt** / địa chỉ `#/settings`:
-
-```js
-GAS_WEB_APP_URL: 'https://script.google.com/macros/s/XXXX/exec',
-SYNC_TOKEN: '' // trùng Script Property nếu bạn bật
-```
-
-URL chỉ nên nằm ở config / Settings, không hard-code rải trong nhiều file.
-
----
-
-## 12. Running locally
-
-Trong thư mục `field-survey-pwa`:
-
-```bash
-# Cách 1 — Node
-npx --yes serve -l 4173
-
-# Cách 2 — Python
-python -m http.server 4173
-```
-
-Mở http://localhost:4173
-
-Service Worker **không** hoạt động nếu mở file bằng `file://`.
-
-**Chạy trên điện thoại:** xem `docs/run-on-phone.md`. Tóm tắt: cùng Wi‑Fi thì mở `http://<IPv4-máy-tính>:4173`; muốn cài Home Screen và demo offline thì phải dùng HTTPS (Netlify Drop hoặc tunnel).
-
----
-
-## 13. Deployment (Cloudflare Pages)
-
-Đã cấu hình sẵn. Trên máy (cần tài khoản Cloudflare):
-
-```powershell
-cd field-survey-pwa
-fnm env --use-on-cd --shell powershell | Out-String | Invoke-Expression
-fnm use 20.18.0
-npm install
-npx wrangler login
-npm run deploy
-```
-
-`npm run deploy` đóng gói `dist/` rồi `wrangler pages deploy`. URL production dạng:
-
-`https://vku-field-survey-pwa.pages.dev`
-
-CI tự deploy khi push `main`: thêm secret GitHub `CLOUDFLARE_API_TOKEN` và `CLOUDFLARE_ACCOUNT_ID`. Workflow: `.github/workflows/cloudflare-pages.yml`.
-
-Host tĩnh khác (Netlify Drop, GitHub Pages, nginx + TLS) vẫn dùng được vì `start_url` là đường dẫn tương đối. Sau khi có HTTPS, mở trên điện thoại → Add to Home Screen. Dán URL Apps Script trong Cài đặt trên thiết bị demo.
-
----
-
-## 14. Offline testing (flow demo chính)
-
-1. Mở app khi **Online**.
-2. Tắt Internet (Airplane mode hoặc DevTools → Network → Offline).
-3. Refresh: app **vẫn mở** nhờ App Shell cache.
-4. Chọn khảo sát, điền form, Gửi.
-5. Thấy “Đã lưu khảo sát trên thiết bị”, DevTools → Application → IndexedDB → `responses` → `status = pending`.
-6. Bật Internet.
-7. App tự sync (toast “Đang đồng bộ…” / “Đồng bộ thành công”).
-8. Mở Google Sheet: có dòng mới, `response_id` khớp.
-
----
+Xem mục **G**.
 
 ## 15. Project structure
 
@@ -235,80 +303,46 @@ field-survey-pwa/
 ├── index.html
 ├── manifest.json
 ├── service-worker.js
+├── wrangler.toml
+├── package.json
 ├── css/
-│   ├── style.css
-│   └── responsive.css
 ├── js/
-│   ├── app.js
-│   ├── router.js
-│   ├── survey.js
-│   ├── form.js
-│   ├── db.js
-│   ├── sync.js
-│   ├── api.js
-│   ├── ui.js
-│   └── config.js
-├── data/
-│   └── surveys.json
+├── data/surveys.json
 ├── icons/
-├── apps-script/
-│   └── Code.gs
-├── README.md
-└── docs/
-    ├── technical-report.md
-    └── submission-checklist.md
+├── apps-script/Code.gs
+├── scripts/build-pages.mjs
+├── scripts/deploy.ps1
+├── .github/workflows/cloudflare-pages.yml
+├── docs/
+│   ├── technical-report.md
+│   ├── submission-checklist.md
+│   └── run-on-phone.md
+└── README.md
 ```
 
----
+## 16. Screenshots (chụp trước khi nộp)
 
-## 16. Screenshots placeholder
-
-Thêm ảnh chụp khi demo trước khi nộp:
-
-- `docs/screenshots/home-online.png`
-- `docs/screenshots/home-offline.png`
-- `docs/screenshots/form.png`
-- `docs/screenshots/success-offline.png`
-- `docs/screenshots/indexeddb.png`
-- `docs/screenshots/sheets.png`
-- `docs/screenshots/installed-pwa.png`
-
----
+Đặt vào `docs/screenshots/`: home online/offline, form, success offline, IndexedDB, Google Sheets, app đã cài.
 
 ## 17. Future improvements
 
-- Đăng nhập giảng viên / điều tra viên.
-- Ảnh hiện trường (lưu Blob trong IndexedDB, sync Drive).
-- GPS / bản đồ vị trí khảo sát.
-- Admin UI tạo khảo sát trên Sheets rồi PWA Network-First kéo về.
-- Conflict resolution khi sửa bản ghi đã sync.
-- Thay Sheets bằng API có auth thật khi đưa vào production.
+Ảnh hiện trường, GPS, admin tạo khảo sát trên Sheets, API có đăng nhập.
 
 ---
 
-## Hướng dẫn tạo Google Sheet + Apps Script
+## Bảo mật
 
-1. Tạo Google Sheet trống, đặt tên `FieldSurveyDB`.
-2. `Extensions` → `Apps Script`.
-3. Dán `apps-script/Code.gs`, lưu.
-4. Chạy hàm `setupSheets` (Run) để tạo header. Cấp quyền cho tài khoản Google của bạn.
-5. (Tuỳ chọn) `Project Settings` → Script properties → thêm `SYNC_TOKEN`.
-6. `Deploy` → `New deployment` → loại **Web app**.
-   - Execute as: **Me**
-   - Who has access: **Anyone**
-7. Copy URL dạng `https://script.google.com/macros/s/<ID>/exec`.
-8. Dán vào ô **Google Apps Script URL** trong trang Cài đặt (nút **⚙ Cài đặt** góc trên phải) hoặc vào `js/config.js`.
-
-Client gửi `Content-Type: text/plain` để tránh CORS preflight — đây là cách ổn định với Apps Script.
+Web App “Anyone” = ai có URL cũng POST được. Token trên frontend không phải bí mật. Không thu thập dữ liệu nhạy cảm.
 
 ---
 
-## Security notes
+## File hướng dẫn khác
 
-Google Apps Script Web App “Anyone” nghĩa là **ai có URL cũng POST được**. Token trên frontend chỉ là lớp chặn nhẹ, không phải bí mật. Không thu thập thông tin nhạy cảm. Quyền Sheet nằm ở tài khoản Google của người deploy.
-
----
-
-## License
+| File | Nội dung |
+| --- | --- |
+| `apps-script/README.md` | Tạo Sheet + deploy Apps Script |
+| `docs/run-on-phone.md` | Chi tiết chạy / cài trên điện thoại |
+| `docs/technical-report.md` | Báo cáo 2–4 trang |
+| `docs/submission-checklist.md` | Checklist trước khi nộp |
 
 Đồ án học tập — VKU.

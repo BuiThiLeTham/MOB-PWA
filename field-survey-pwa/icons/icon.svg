@@ -1,12 +1,34 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" role="img" aria-label="Field Survey">
-  <rect width="512" height="512" rx="96" fill="#0c3d36"/>
-  <rect x="118" y="86" width="276" height="340" rx="28" fill="#e7f6f2"/>
-  <rect x="150" y="128" width="212" height="28" rx="8" fill="#0f6e62"/>
-  <rect x="150" y="184" width="168" height="18" rx="6" fill="#9cc9c0"/>
-  <rect x="150" y="220" width="196" height="18" rx="6" fill="#9cc9c0"/>
-  <circle cx="168" cy="286" r="14" fill="#0f6e62"/>
-  <path d="M161 286 l5 6 12-14" fill="none" stroke="#e7f6f2" stroke-width="5" stroke-linecap="round"/>
-  <rect x="194" y="276" width="140" height="18" rx="6" fill="#9cc9c0"/>
-  <circle cx="168" cy="334" r="14" fill="#d97706"/>
-  <rect x="194" y="324" width="120" height="18" rx="6" fill="#9cc9c0"/>
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#0b3a35"/>
+      <stop offset="100%" stop-color="#146b60"/>
+    </linearGradient>
+    <linearGradient id="paper" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#f4fffc"/>
+      <stop offset="100%" stop-color="#dff2ed"/>
+    </linearGradient>
+  </defs>
+  <rect width="512" height="512" rx="112" fill="url(#bg)"/>
+  <circle cx="394" cy="124" r="56" fill="#f59e0b" opacity="0.18"/>
+  <circle cx="116" cy="404" r="72" fill="#34d399" opacity="0.14"/>
+  <rect x="124" y="96" width="264" height="320" rx="34" fill="url(#paper)"/>
+  <rect x="206" y="70" width="100" height="42" rx="18" fill="#0a4f47"/>
+  <rect x="156" y="146" width="118" height="18" rx="9" fill="#0f6e62"/>
+  <rect x="156" y="184" width="162" height="18" rx="9" fill="#9cc9c0"/>
+  <g>
+    <circle cx="174" cy="244" r="16" fill="#0f6e62"/>
+    <path d="M166 244l6 7 13-16" fill="none" stroke="#eaf8f4" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
+    <rect x="204" y="235" width="120" height="18" rx="9" fill="#9cc9c0"/>
+  </g>
+  <g>
+    <circle cx="174" cy="298" r="16" fill="#0f6e62"/>
+    <path d="M166 298l6 7 13-16" fill="none" stroke="#eaf8f4" stroke-width="6" stroke-linecap="round" stroke-linejoin="round"/>
+    <rect x="204" y="289" width="96" height="18" rx="9" fill="#9cc9c0"/>
+  </g>
+  <g transform="translate(0 8)">
+    <path d="M356 236c-37.6 0-68 30.4-68 68 0 49.6 53.7 102.5 63.8 111.9a6 6 0 0 0 8.4 0c10.1-9.4 63.8-62.3 63.8-111.9 0-37.6-30.4-68-68-68Z" fill="#f59e0b"/>
+    <circle cx="356" cy="304" r="24" fill="#fff6df"/>
+    <circle cx="356" cy="304" r="11" fill="#f59e0b"/>
+  </g>
 </svg>
